@@ -14,14 +14,30 @@ pipeline{
          }
     }
         post {
-                success {
-                    script {
-                        def server = Artifactory.newServer(url: 'http://13.233.88.80:8081/artifactory/', credentialsId: 'abc')
-                        def rtMaven = Artifactory.newMavenBuild()
-                        rtMaven.deployer server: server, releaseRepo: 'libs-release/', snapshotRepo: 'libs-snapshot/'
-                        rtMaven.tool = 'maven'
-                        rtMaven.run(pom: 'pom.xml', goals: 'clean install')
-                    }
-                }
-            }
+    success {
+        script {
+            def server = Artifactory.newServer(
+                url: 'http://13.233.88.80:8081/artifactory',
+                credentialsId: 'abc'
+            )
+
+            def rtMaven = Artifactory.newMavenBuild()
+
+            rtMaven.deployer(
+                server: server,
+                releaseRepo: 'libs-release',
+                snapshotRepo: 'libs-snapshot'
+            )
+
+            rtMaven.deployer.deployArtifacts = true
+            rtMaven.tool = 'maven'
+
+            // DO NOT rebuild — just publish build-info
+            rtMaven.run(
+                pom: 'pom.xml',
+                goals: 'install'
+            )
+        }
     }
+}
+}
