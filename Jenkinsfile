@@ -17,7 +17,7 @@ pipeline{
     success {
         script {
             def server = Artifactory.newServer(
-                url: 'http://13.233.88.80:8081/artifactory',
+                url: 'http://35.154.174.146:8081/artifactory',
                 credentialsId: 'abc'
             )
 
